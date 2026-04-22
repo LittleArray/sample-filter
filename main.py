@@ -53,6 +53,51 @@ class ImageClassifier:
         ]
         self.image_list.sort()
 
+    def rename_output_images(self):
+        """将output文件夹下的图片批量重命名为 0001.扩展名 格式"""
+        output_dir = self.output_dir
+        if not os.path.exists(output_dir):
+            messagebox.showinfo("提示", "output文件夹不存在")
+            return
+        
+        # 获取所有图片文件
+        files = [f for f in os.listdir(output_dir) if f.lower().endswith(self.supported_ext)]
+        if not files:
+            messagebox.showinfo("提示", "output文件夹中没有图片")
+            return
+        
+        # 询问确认
+        if not messagebox.askyesno("确认", f"即将重命名 {len(files)} 个文件，\n格式：0001、0002...\n是否继续？"):
+            return
+        
+        # 按文件名排序（确保顺序可预测）
+        files.sort()
+        renamed_count = 0
+        
+        for idx, filename in enumerate(files, start=1):
+            ext = os.path.splitext(filename)[1]  # 包含点，如 ".jpg"
+            new_name = f"{idx:04d}{ext}"
+            old_path = os.path.join(output_dir, filename)
+            new_path = os.path.join(output_dir, new_name)
+            
+            # 如果新文件名已存在且不是同一文件，添加后缀避免冲突
+            if os.path.exists(new_path) and old_path != new_path:
+                base = f"{idx:04d}"
+                counter = 1
+                while os.path.exists(os.path.join(output_dir, f"{base}_{counter}{ext}")):
+                    counter += 1
+                new_name = f"{base}_{counter}{ext}"
+                new_path = os.path.join(output_dir, new_name)
+            
+            try:
+                os.rename(old_path, new_path)
+                renamed_count += 1
+            except Exception as e:
+                messagebox.showerror("错误", f"重命名失败: {filename}\n{str(e)}")
+                return
+        
+        messagebox.showinfo("完成", f"成功重命名 {renamed_count} 个文件")
+
     def create_widgets(self):
         """创建GUI控件"""
         # 顶部信息栏
@@ -89,6 +134,9 @@ class ImageClassifier:
 
         self.undo_btn = tk.Button(button_frame, text="撤销 (Z)", command=lambda: self.undo(None))
         self.undo_btn.pack(side="left", padx=10)
+        
+        self.rename_btn = tk.Button(button_frame, text="输出批量重命名", command=self.rename_output_images)
+        self.rename_btn.pack(side="left", padx=10)
 
     def update_display(self):
         """更新显示当前图片"""
