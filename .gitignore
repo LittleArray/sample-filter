@@ -1,0 +1,43 @@
+# Python 字节码和缓存
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# 虚拟环境（重要：不要提交 venv 文件夹）
+venv/
+env/
+ENV/
+.venv
+
+# IDE 和编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 项目数据目录（根据需求选择是否忽略）
+# 如果希望保留目录结构但忽略内容，可以如下写法：
+input/
+output/
+
+# 日志和临时文件
+*.log
+*.tmp
+*.bak
+
+# 打包文件
+*.egg-info/
+dist/
+build/
+
+# 单元测试/覆盖率
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
