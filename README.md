@@ -21,5 +21,5 @@
 ### 1. 克隆或下载项目
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/LittleArray/sample-filter.git
 cd image-screener
